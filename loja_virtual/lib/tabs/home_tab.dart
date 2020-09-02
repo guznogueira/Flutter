@@ -1,0 +1,77 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:transparent_image/transparent_image.dart';
+
+class HomeTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Widget _buildBodyBack() => Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+            Color.fromARGB(255, 210, 120, 130),
+            Color.fromARGB(255, 250, 180, 170)
+          ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+        );
+
+    return Stack(
+      children: <Widget>[
+        _buildBodyBack(),
+        CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              floating: true,
+              snap: true,
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              flexibleSpace: FlexibleSpaceBar(
+                title: const Text("Novidades"),
+                centerTitle: true,
+              ),
+            ),
+            FutureBuilder<QuerySnapshot>(
+              // ignore: deprecated_member_use
+              future: Firestore.instance
+                  .collection("home")
+                  .orderBy("posicao")
+                  .get(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  print("Não foi!!");
+                  return SliverToBoxAdapter(
+                    child: Container(
+                      height: 200,
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.white),
+                      ),
+                    ),
+                  );
+                } else {
+                  print(snapshot.data.docChanges.length);
+                  return SliverStaggeredGrid.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 1.0,
+                    crossAxisSpacing: 1.0,
+                    staggeredTiles: snapshot.data.docs.map((doc) {
+                      return StaggeredTile.count(
+                          doc.get("largura"), doc.get("altura"));
+                    }).toList(),
+                    children: snapshot.data.docs.map((doc) {
+                      return FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: doc.get("image"),
+                        fit: BoxFit.cover,
+                      );
+                    }).toList(),
+                  );
+                }
+              },
+            )
+          ],
+        )
+      ],
+    );
+  }
+}
