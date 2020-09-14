@@ -35,7 +35,7 @@ class _ProductScreenState extends State<ProductScreen> {
               images: productData.images.map((url) {
                 return NetworkImage(url);
               }).toList(),
-              dotSize: 8.0,
+              dotSize: 5.0,
               dotSpacing: 15.0,
               dotBgColor: Colors.transparent,
               dotColor: Colors.grey,
