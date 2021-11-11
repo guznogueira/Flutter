@@ -32,13 +32,12 @@ class HomeTab extends StatelessWidget {
             ),
             FutureBuilder<QuerySnapshot>(
               // ignore: deprecated_member_use
-              future: Firestore.instance
+              future: FirebaseFirestore.instance
                   .collection("home")
                   .orderBy("posicao")
                   .get(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  print("Não foi!!");
                   return SliverToBoxAdapter(
                     child: Container(
                       height: 200,
@@ -49,7 +48,6 @@ class HomeTab extends StatelessWidget {
                     ),
                   );
                 } else {
-                  print(snapshot.data.docChanges.length);
                   return SliverStaggeredGrid.count(
                     crossAxisCount: 2,
                     mainAxisSpacing: 1.0,
