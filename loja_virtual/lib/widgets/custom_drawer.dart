@@ -4,7 +4,6 @@ import 'package:loja_virtual/screens/login_screen.dart';
 import 'package:loja_virtual/titles/drawer_title.dart';
 
 class CustomDrawer extends StatelessWidget {
-
   final PageController pageController;
   CustomDrawer(this.pageController);
 
@@ -15,7 +14,7 @@ class CustomDrawer extends StatelessWidget {
               gradient: LinearGradient(
                   colors: [Color.fromARGB(255, 203, 236, 241), Colors.white],
                   begin: Alignment.topCenter,
-                  end: Alignment.center)),
+                  end: Alignment.bottomCenter)),
         );
 
     return Drawer(
@@ -23,7 +22,7 @@ class CustomDrawer extends StatelessWidget {
         children: <Widget>[
           _buildDrawerBack(),
           ListView(
-            padding: EdgeInsets.only(left: 32.0, top: 16.0),
+            padding: EdgeInsets.only(left: 32.0, top: 32.0),
             children: <Widget>[
               Container(
                 margin: EdgeInsets.only(bottom: 8.0),
@@ -56,7 +55,8 @@ class CustomDrawer extends StatelessWidget {
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.bold)),
                             onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => LoginScreen()));
                             },
                           )
                         ],
@@ -69,7 +69,8 @@ class CustomDrawer extends StatelessWidget {
               DrawerTitle(Icons.home, "Início", pageController, 0),
               DrawerTitle(Icons.list, "Produtos", pageController, 1),
               DrawerTitle(Icons.location_on, "Lojas", pageController, 2),
-              DrawerTitle(Icons.playlist_add_check, "Meus Pedidos", pageController, 3),
+              DrawerTitle(
+                  Icons.playlist_add_check, "Meus Pedidos", pageController, 3),
             ],
           )
         ],
