@@ -6,7 +6,7 @@ class CategoryTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
-      future: Firestore.instance.collection("products").get(),
+      future: FirebaseFirestore.instance.collection("products").get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(

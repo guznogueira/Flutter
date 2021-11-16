@@ -2,7 +2,7 @@
     package="com.example.loja_virtual">
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="loja_virtual"
+        android:label="Loja Virtual"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

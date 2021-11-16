@@ -15,9 +15,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _passController = TextEditingController();
   final _addressController = TextEditingController();
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text("Criar Conta"),
           centerTitle: true,
@@ -39,7 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _nameController,
                         keyboardType: TextInputType.name,
                         validator: (text) {
-                          if (text.isEmpty) return "Nome inválido!";
+                          return text.isEmpty ? "Nome inválido!" : null;
                         },
                       ),
                       SizedBox(
@@ -50,8 +53,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         validator: (text) {
-                          if (text.isEmpty || !text.contains("@"))
-                            return "Email inválido!";
+                          return (text.isEmpty || !text.contains("@"))
+                              ? "Email inválido!"
+                              : null;
                         },
                       ),
                       SizedBox(
@@ -62,8 +66,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _passController,
                         obscureText: true,
                         validator: (text) {
-                          if (text.isEmpty || text.length < 6)
-                            return "Senha inválida!";
+                          return (text.isEmpty || text.length < 6)
+                              ? "Senha inválida!"
+                              : null;
                         },
                       ),
                       SizedBox(
@@ -74,7 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         controller: _addressController,
                         keyboardType: TextInputType.streetAddress,
                         validator: (text) {
-                          if (text.isEmpty) return "Endereço inválido!";
+                          return text.isEmpty ? "Endereço inválido!" : null;
                         },
                       ),
                       SizedBox(
@@ -93,7 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                               model.signUp(
                                   userData: userData,
-                                  passWord: _passController.text,
+                                  password: _passController.text,
                                   onSucces: _onSucess,
                                   onFail: _onFail);
                             }
@@ -114,8 +119,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _onSucess() {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text("Usuário criado com sucesso!"),
+      backgroundColor: Theme.of(context).primaryColor,
+      duration: Duration(seconds: 2),
+    ));
+
+    Future.delayed(Duration(seconds: 2))
+        .then((_) => {Navigator.of(context).pop()});
   }
 
   void _onFail() {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text("Falha ao criar usuário!"),
+      backgroundColor: Colors.red,
+      duration: Duration(seconds: 2),
+    ));
   }
 }
