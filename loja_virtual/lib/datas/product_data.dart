@@ -17,4 +17,12 @@ class ProductData {
     this.images = doc.get("images");
     this.sizes = doc.get("sizes");
   }
+
+  Map<String, dynamic> toResumeMap() {
+    return {
+      "title": title,
+      "description": description,
+      "price": price,
+    };
+  }
 }

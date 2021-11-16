@@ -10,6 +10,9 @@ class UserModel extends Model {
   Map<String, dynamic> userData = Map();
   bool isLoading = false;
 
+  static UserModel of(BuildContext context) =>
+      ScopedModel.of<UserModel>(context);
+
   @override
   void addListener(VoidCallback listener) {
     super.addListener(listener);

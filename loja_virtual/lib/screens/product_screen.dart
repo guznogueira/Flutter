@@ -1,6 +1,11 @@
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
+import 'package:loja_virtual/datas/cart_product.dart';
 import 'package:loja_virtual/datas/product_data.dart';
+import 'package:loja_virtual/models/cart_model.dart';
+import 'package:loja_virtual/models/user_model.dart';
+import 'package:loja_virtual/screens/cart_screen.dart';
+import 'package:loja_virtual/screens/login_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   final ProductData productData;
@@ -17,12 +22,14 @@ class _ProductScreenState extends State<ProductScreen> {
   final ProductData productData;
 
   _ProductScreenState(this.productData);
+  final _scaffoldState = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
+      key: _scaffoldState,
       appBar: AppBar(
         title: Text(productData.title),
         centerTitle: true,
@@ -109,9 +116,37 @@ class _ProductScreenState extends State<ProductScreen> {
                 SizedBox(
                   height: 50.0,
                   child: RaisedButton(
-                    onPressed: sizeSelected != null ? (){} : null,
+                    onPressed: () {
+                      if (UserModel.of(context).isLoggedIn()) {
+                        if (sizeSelected != null) {
+                          CartProduct cartProduct = CartProduct();
+
+                          cartProduct.size = sizeSelected;
+                          cartProduct.quantity = 1;
+                          cartProduct.productID = productData.id;
+                          cartProduct.category = productData.category;
+                          cartProduct.productData = productData;
+
+                          CartModel.of(context).addCartItem(cartProduct);
+
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => CartScreen()));
+                        } else {
+                          _scaffoldState.currentState.showSnackBar(SnackBar(
+                            content: Text("Selecione o tamanho"),
+                            backgroundColor: Colors.red,
+                            duration: Duration(seconds: 3),
+                          ));
+                        }
+                      } else {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => LoginScreen()));
+                      }
+                    },
                     child: Text(
-                      "Adicionar ao Carrinho",
+                      UserModel.of(context).isLoggedIn()
+                          ? "Adicionar ao Carrinho"
+                          : "Faça o login para comprar",
                       style: TextStyle(fontSize: 18.0, color: Colors.white),
                     ),
                     color: primaryColor,
