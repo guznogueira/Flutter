@@ -6,6 +6,7 @@ import 'package:loja_virtual/models/cart_model.dart';
 import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/cart_screen.dart';
 import 'package:loja_virtual/screens/login_screen.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class ProductScreen extends StatefulWidget {
   final ProductData productData;
@@ -115,41 +116,54 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
                 SizedBox(
                   height: 50.0,
-                  child: RaisedButton(
-                    onPressed: () {
-                      if (UserModel.of(context).isLoggedIn()) {
-                        if (sizeSelected != null) {
-                          CartProduct cartProduct = CartProduct();
+                  child: ScopedModelDescendant<CartModel>(
+                    builder: (context, child, model) {
+                      return RaisedButton(
+                        onPressed: () {
+                          if (UserModel.of(context).isLoggedIn()) {
+                            if (sizeSelected != null) {
+                              bool hasProduct = false;
+                              model.products.forEach((prod) {
+                                if (prod.productID == productData.id) {
+                                  hasProduct = true;
+                                }
+                              });
 
-                          cartProduct.size = sizeSelected;
-                          cartProduct.quantity = 1;
-                          cartProduct.productID = productData.id;
-                          cartProduct.category = productData.category;
-                          cartProduct.productData = productData;
+                              if (!hasProduct) {
+                                CartProduct cartProduct = CartProduct();
 
-                          CartModel.of(context).addCartItem(cartProduct);
+                                cartProduct.size = sizeSelected;
+                                cartProduct.quantity = 1;
+                                cartProduct.productID = productData.id;
+                                cartProduct.category = productData.category;
+                                cartProduct.productData = productData;
 
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => CartScreen()));
-                        } else {
-                          _scaffoldState.currentState.showSnackBar(SnackBar(
-                            content: Text("Selecione o tamanho"),
-                            backgroundColor: Colors.red,
-                            duration: Duration(seconds: 3),
-                          ));
-                        }
-                      } else {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => LoginScreen()));
-                      }
+                                CartModel.of(context).addCartItem(cartProduct);
+                              }
+
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => CartScreen()));
+                            } else {
+                              _scaffoldState.currentState.showSnackBar(SnackBar(
+                                content: Text("Selecione o tamanho"),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 3),
+                              ));
+                            }
+                          } else {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                          }
+                        },
+                        child: Text(
+                          UserModel.of(context).isLoggedIn()
+                              ? "Adicionar ao Carrinho"
+                              : "Faça o login para comprar",
+                          style: TextStyle(fontSize: 18.0, color: Colors.white),
+                        ),
+                        color: primaryColor,
+                      );
                     },
-                    child: Text(
-                      UserModel.of(context).isLoggedIn()
-                          ? "Adicionar ao Carrinho"
-                          : "Faça o login para comprar",
-                      style: TextStyle(fontSize: 18.0, color: Colors.white),
-                    ),
-                    color: primaryColor,
                   ),
                 ),
                 SizedBox(
