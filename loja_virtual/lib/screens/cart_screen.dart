@@ -94,7 +94,17 @@ class CartScreen extends StatelessWidget {
                 ),
                 DiscountCart(),
                 ShipCard(),
-                CartPrice(() {})
+                CartPrice(() async {
+                  String orderId = await model.finishOrder();
+                  if (orderId != null) {
+                    print(orderId);
+                  } else {
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text("Falha ao criar pedido!"),
+                      backgroundColor: Colors.red,
+                    ));
+                  }
+                })
               ],
             );
           }
