@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loja_virtual/models/cart_model.dart';
 import 'package:loja_virtual/models/user_model.dart';
 import 'package:loja_virtual/screens/login_screen.dart';
+import 'package:loja_virtual/screens/order_screen.dart';
 import 'package:loja_virtual/titles/cart_title.dart';
 import 'package:loja_virtual/widgets/cart_price.dart';
 import 'package:loja_virtual/widgets/discount_cart.dart';
@@ -97,7 +98,8 @@ class CartScreen extends StatelessWidget {
                 CartPrice(() async {
                   String orderId = await model.finishOrder();
                   if (orderId != null) {
-                    print(orderId);
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => OrderScreen(orderId)));
                   } else {
                     Scaffold.of(context).showSnackBar(SnackBar(
                       content: Text("Falha ao criar pedido!"),

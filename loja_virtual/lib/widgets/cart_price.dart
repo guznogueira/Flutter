@@ -43,7 +43,7 @@ class CartPrice extends StatelessWidget {
                 Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("Desconto"), Text("R\$ ${textDiscount}")],
+                  children: [Text("Desconto"), Text("R\$ $textDiscount")],
                 ),
                 Divider(),
                 Row(
